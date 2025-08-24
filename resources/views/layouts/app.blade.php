@@ -13,6 +13,9 @@
       <a href="{{ route('tasks.index') }}" class="font-semibold text-lg">Mini Task Manager</a>
       <a href="{{ route('tasks.create') }}"
          class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">New Task</a>
+         <li><a href="{{ route('home') }}">Tasks</a></li>
+        <a href="{{ route('products.index') }}" class="font-semibold text-lg text-green-600 hover:text-green-800">Mini Market</a>
+
     </div>
   </nav>
 
