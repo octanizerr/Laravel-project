@@ -7,7 +7,7 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    
+    // Show all products with search, filter, sort, and pagination
     public function index(Request $request)
     {
         $query = Product::query();
@@ -32,7 +32,7 @@ class ProductController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        
+        // Paginate
         $products = $query->paginate(10)->appends([
             'search' => $request->search,
             'category' => $request->category,
@@ -51,16 +51,17 @@ class ProductController extends Controller
     // Store new product
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'category' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
-            'description' => 'nullable'
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:1',
+            'description' => 'nullable|string'
         ]);
 
-        Product::create($request->all());
-        return redirect()->route('products.index')->with('success', 'Product added!');
+        Product::create($validated);
+
+        return redirect()->route('products.index')->with('success', '✅ Product added successfully!');
     }
 
     // Show single product
@@ -78,22 +79,23 @@ class ProductController extends Controller
     // Update product
     public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required',
-            'category' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
-            'description' => 'nullable'
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:1',
+            'description' => 'nullable|string'
         ]);
 
-        $product->update($request->all());
-        return redirect()->route('products.index')->with('success', 'Product updated!');
+        $product->update($validated);
+
+        return redirect()->route('products.index')->with('success', '✅ Product updated successfully!');
     }
 
     // Delete product
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Product deleted!');
+        return redirect()->route('products.index')->with('success', '❌ Product deleted!');
     }
 }
